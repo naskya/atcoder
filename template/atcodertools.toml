@@ -1,6 +1,6 @@
 [codestyle]
 indent_type='tab'
-workspace_dir='~/atcoder/contest/'
+workspace_dir='~/workspace/atcoder/contest/'
 lang='cpp'
 
 [etc]
