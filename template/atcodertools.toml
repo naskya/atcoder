@@ -1,0 +1,13 @@
+[codestyle]
+indent_type='tab'
+workspace_dir='~/atcoder/contest/'
+lang='cpp'
+
+[etc]
+download_without_login=false
+parallel_download=true
+save_no_session_cache=false
+skip_existing_problems=false
+in_example_format="i{}"
+out_example_format="o{}"
+
