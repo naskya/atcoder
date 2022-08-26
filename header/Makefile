@@ -1,7 +1,7 @@
 CXX = clang++
 SRC = headers.hpp
 
-COMMON_OPT = -std=c++17 -stdlib=libc++ -DLOCAL
+COMMON_OPT = -std=c++17 -stdlib=libc++ -DLOCAL -I ../ac-library
 DEBUG_OPT  = -O0 -g -DDEBUG -D_LIBCPP_DEBUG_LEVEL=2 -fsanitize=address,undefined
 NDEBUG_OPT = -O2
 PRINT_OPT  = -DDEBUG_PRINT

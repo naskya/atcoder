@@ -36,6 +36,7 @@
 #  include <tuple>
 #  include <utility>
 #  include <vector>
+#  include <atcoder/all>
 #  define M_assert(expr) \
    do { \
      if (__builtin_expect(!(expr), 0)) { \

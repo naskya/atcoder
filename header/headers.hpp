@@ -31,6 +31,7 @@
 #  include <tuple>
 #  include <utility>
 #  include <vector>
+#  include <atcoder/all>
 #  include "debug_print.hpp"
 #endif
 
