@@ -1,11 +1,12 @@
 [codestyle]
 indent_type='tab'
 workspace_dir='~/workspace/atcoder/contest/'
+template_file='~/workspace/atcoder/template/template.cpp'
 lang='cpp'
 
 [etc]
 download_without_login=false
-parallel_download=true
+parallel_download=false
 save_no_session_cache=false
 skip_existing_problems=false
 in_example_format="i{}"
