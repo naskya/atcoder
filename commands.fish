@@ -28,7 +28,7 @@ function compile_debug_on_print_on
                                                                                           \
     -std=c++17 -stdlib=libc++                                                             \
     -DLOCAL -DDEBUG -DDEBUG_PRINT                                                         \
-    -D_LIBCPP_DEBUG_LEVEL=2 -O0 -g3 -fsanitize=address,undefined                          \
+    -D_LIBCPP_DEBUG=1 -O0 -g3 -fsanitize=address,undefined                                \
     -include-pch {$atcoder_dir}/header/precompiled/debug_on_print_on/headers.hpp.pch      \
                                                                                           \
     -Wall -Wextra -Wcast-qual -Wconversion -Wdisabled-optimization -Wdouble-promotion     \
@@ -47,7 +47,7 @@ function compile_debug_on_print_off
                                                                                            \
     -std=c++17 -stdlib=libc++                                                              \
     -DLOCAL -DDEBUG                                                                        \
-    -D_LIBCPP_DEBUG_LEVEL=2 -O0 -g3 -fsanitize=address,undefined                           \
+    -D_LIBCPP_DEBUG=1 -O0 -g3 -fsanitize=address,undefined                                 \
     -include-pch {$atcoder_dir}/header/precompiled/debug_on_print_off/headers.hpp.pch      \
                                                                                            \
     -Wall -Wextra -Wcast-qual -Wconversion -Wdisabled-optimization -Wdouble-promotion      \
@@ -96,6 +96,41 @@ end
 
 function fxx
     compile_debug_off_print_off -o a main.cpp
+end
+
+
+function ck
+    cp_init
+    cx
+    atcoder-tools test
+end
+
+
+function sm
+    cp_init
+    cx
+    atcoder-tools submit -u
+end
+
+
+function compile_debug_on_print_on_sanitize_off
+    clang++                                                                                       \
+                                                                                                  \
+    -std=c++17 -stdlib=libc++                                                                     \
+    -DLOCAL -DDEBUG -DDEBUG_PRINT                                                                 \
+    -D_LIBCPP_DEBUG=1 -O0 -g3                                                                     \
+    -include-pch {$atcoder_dir}/header/precompiled/debug_on_print_on_sanitize_off/headers.hpp.pch \
+                                                                                                  \
+    -Wall -Wextra -Wcast-qual -Wconversion -Wdisabled-optimization -Wdouble-promotion             \
+    -Winit-self -Winvalid-pch -Wmultichar -Wredundant-decls -Wshadow -Wsign-promo                 \
+    -Wunused-const-variable -Wno-reorder -ferror-limit=1 $argv
+end
+
+
+function db
+    compile_debug_on_print_on_sanitize_off -o a main.cpp
+    lldb --one-line "settings set target.input-path ./i"(set -q $argv[1]; and echo $argv[1]; or echo 1) \
+         --one-line "process launch" ./a
 end
 
 
