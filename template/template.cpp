@@ -48,7 +48,7 @@
   do {                                                              \
     if (__builtin_expect(!(expr), 0)) {                             \
       auto p = static_cast<std::int64_t*>(std::malloc(1073741824)); \
-      for (int i = 0; i < 134217728; p[i] = 1, i += 512);           \
+      for (int i = 0; p[i] = 0, i < 134217728; i += 512);           \
         std::cerr << (*p);                                          \
     }                                                               \
   } while (0)
