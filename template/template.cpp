@@ -1,8 +1,12 @@
 // fold begin
 #define _USE_MATH_DEFINES
 
+// https://atcoder.jp/contests/language-test-202001
+#ifdef NDEBUG
+#  undef NDEBUG
+#endif
+
 #ifdef LOCAL
-#  include <headers.hpp>
 #  define M_assert(expr) assert(expr)
 #  define O_assert(expr) assert(expr)
 #else
@@ -112,7 +116,6 @@ template <class... Ts> [[nodiscard]] constexpr auto Max(const Ts... args) { retu
 void yes(const bool flag) { std::cout << (flag ? "{{ yes_str }}\n" : "{{ no_str }}\n"); }
 {% endif %}
 {% endif %}
-
 {% if prediction_success %}
 void solve({{ formal_arguments }}) {
   
