@@ -31,9 +31,19 @@
 namespace debug_print {
   std::ostream& os = std::cerr;
 
-  constexpr std::string_view ansi_cyan        = "\x1b[36m";
-  constexpr std::string_view ansi_light_black = "\x1b[90m";
-  constexpr std::string_view ansi_reset       = "\x1b[0m";
+  namespace color {
+    template <bool> constexpr std::string_view gray;
+    template <bool> constexpr std::string_view cyan;
+    template <bool> constexpr std::string_view reset;
+
+    template <> constexpr std::string_view gray<true>  = "\x1b[36m";
+    template <> constexpr std::string_view cyan<true>  = "\x1b[90m";
+    template <> constexpr std::string_view reset<true> = "\x1b[0m";
+
+    template <> constexpr std::string_view gray<false>  = "";
+    template <> constexpr std::string_view cyan<false>  = "";
+    template <> constexpr std::string_view reset<false> = "";
+  }
 
   template <class Tp> auto has_cbegin(int)     -> decltype(std::cbegin(std::declval<Tp>()), std::true_type {});
   template <class Tp> auto has_cbegin(...)     -> std::false_type;
@@ -102,24 +112,28 @@ namespace debug_print {
   }
 
   template <bool UseColor> void out(const char& arg) {
-    os << (UseColor ? ansi_light_black : "") << '\'' << (UseColor ? ansi_reset : "")
-       << arg << (UseColor ? ansi_light_black : "") << '\'' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '\'' << color::reset<UseColor>
+       << arg
+       << color::gray<UseColor> << '\'' << color::reset<UseColor>;
   }
 
   template <bool UseColor> void out(const char* arg) {
-    os << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "")
-       << arg << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '\"' << color::reset<UseColor>
+       << arg
+       << color::gray<UseColor> << '\"' << color::reset<UseColor>;
   }
 
   template <bool UseColor> void out(const std::string_view& arg) {
-    os << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "")
-       << arg << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '\"' << color::reset<UseColor>
+       << arg
+       << color::gray<UseColor> << '\"' << color::reset<UseColor>;
   }
 
 #if INCLUDED(STRING)
   template <bool UseColor> void out(const std::string& arg) {
-    os << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "")
-       << arg << (UseColor ? ansi_light_black : "") << '\"' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '\"' << color::reset<UseColor>
+       << arg
+       << color::gray<UseColor> << '\"' << color::reset<UseColor>;
   }
 #endif
 
@@ -149,95 +163,95 @@ namespace debug_print {
 #endif
 
   template <bool UseColor, class Tp1, class Tp2> void out(const std::pair<Tp1, Tp2>& arg) {
-    os << (UseColor ? ansi_light_black : "") << '(' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '(' << color::reset<UseColor>;
     out<UseColor>(arg.first);
-    os << (UseColor ? ansi_light_black : "") << ", " << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ", " << color::reset<UseColor>;
     out<UseColor>(arg.second);
-    os << (UseColor ? ansi_light_black : "") << ')' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ')' << color::reset<UseColor>;
   }
 
 #if INCLUDED(TUPLE)
   template <bool UseColor, class T, std::size_t... Is> void print_tuple(const T& arg, std::index_sequence<Is...>) {
-    static_cast<void>(((os << (UseColor ? ansi_light_black : "") << (Is == 0 ? "" : ", ")
-                           << (UseColor ? ansi_reset : ""), out<UseColor>(std::get<Is>(arg))), ...));
+    static_cast<void>(((os << color::gray<UseColor> << (Is == 0 ? "" : ", ") << color::reset<UseColor>
+                       , out<UseColor>(std::get<Is>(arg))), ...));
   }
 
   template <bool UseColor, class... Ts> void out(const std::tuple<Ts...>& arg) {
-    os << (UseColor ? ansi_light_black : "") << '(' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << '(' << color::reset<UseColor>;
     print_tuple<UseColor>(arg, std::make_index_sequence<sizeof...(Ts)>());
-    os << (UseColor ? ansi_light_black : "") << ')' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ')' << color::reset<UseColor>;
   }
 #endif
 
 #if INCLUDED(STACK)
   template <bool UseColor, class... Ts> void out(std::stack<Ts...> arg) {
     if (arg.empty()) {
-      os << (UseColor ? ansi_light_black : "") << '<' << (UseColor ? ansi_reset : "")
+      os << color::gray<UseColor> << '<' << color::reset<UseColor>
          << "empty stack"
-         << (UseColor ? ansi_light_black : "") << '>' << (UseColor ? ansi_reset : "")
+         << color::gray<UseColor> << '>' << color::reset<UseColor>
          << '\n';
       return;
     }
-    os << (UseColor ? ansi_light_black : "") << "[ " << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << "[ " << color::reset<UseColor>;
     while (!arg.empty()) {
       out<UseColor>(arg.top());
       os << ' ';
       arg.pop();
     }
-    os << (UseColor ? ansi_light_black : "") << ']' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ']' << color::reset<UseColor>;
   }
 #endif
 
 #if INCLUDED(QUEUE)
   template <bool UseColor, class... Ts> void out(std::queue<Ts...> arg) {
     if (arg.empty()) {
-      os << (UseColor ? ansi_light_black : "") << '<' << (UseColor ? ansi_reset : "")
+      os << color::gray<UseColor> << '<' << color::reset<UseColor>
          << "empty queue"
-         << (UseColor ? ansi_light_black : "") << '>' << (UseColor ? ansi_reset : "")
+         << color::gray<UseColor> << '>' << color::reset<UseColor>
          << '\n';
       return;
     }
-    os << (UseColor ? ansi_light_black : "") << "[ " << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << "[ " << color::reset<UseColor>;
     while (!arg.empty()) {
       out<UseColor>(arg.front());
       os << ' ';
       arg.pop();
     }
-    os << (UseColor ? ansi_light_black : "") << ']' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ']' << color::reset<UseColor>;
   }
   template <bool UseColor, class... Ts> void out(std::priority_queue<Ts...> arg) {
     if (arg.empty()) {
-      os << (UseColor ? ansi_light_black : "") << '<' << (UseColor ? ansi_reset : "")
+      os << color::gray<UseColor> << '<' << color::reset<UseColor>
          << "empty priority_queue"
-         << (UseColor ? ansi_light_black : "") << '>' << (UseColor ? ansi_reset : "")
+         << color::gray<UseColor> << '>' << color::reset<UseColor>
          << '\n';
       return;
     }
-    os << (UseColor ? ansi_light_black : "") << "[ " << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << "[ " << color::reset<UseColor>;
     while (!arg.empty()) {
       out<UseColor>(arg.top());
       os << ' ';
       arg.pop();
     }
-    os << (UseColor ? ansi_light_black : "") << ']' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ']' << color::reset<UseColor>;
   }
 #endif
 
   template <bool UseColor, class Container>
   std::enable_if_t<is_iterable_container_v<Container>> out(const Container& arg) {
-    os << (UseColor ? ansi_light_black : "") << "[ " << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << "[ " << color::reset<UseColor>;
     std::for_each(std::cbegin(arg), std::cend(arg), [](const elem_t<Container>& elem) {
       out<UseColor>(elem);
       os << ' ';
     });
-    os << (UseColor ? ansi_light_black : "") << ']' << (UseColor ? ansi_reset : "");
+    os << color::gray<UseColor> << ']' << color::reset<UseColor>;
   }
 
   template <bool UseColor, bool Indent, std::size_t IndentWidth, class Tp> std::enable_if_t<!is_multidim_container_v<Tp>>
   print(std::string_view name, const Tp& arg) {
     for (std::size_t i = 0; i < Indent * IndentWidth; ++i)
       os << ' ';
-    os << (UseColor ? ansi_cyan : "") << name << ": " << (UseColor ? ansi_reset : "");
+    os << color::cyan<UseColor> << name << ": " << color::reset<UseColor>;
     out<UseColor>(arg);
     if constexpr (is_container_v<Tp>)
       os << '\n';
@@ -247,11 +261,11 @@ namespace debug_print {
   print(std::string_view name, const Tp& arg) {
     for (std::size_t i = 0; i < (Indent * IndentWidth); ++i)
       os << ' ';
-    os << (UseColor ? ansi_cyan : "") << name << ": " << (UseColor ? ansi_reset : "");
+    os << color::cyan<UseColor> << name << ": " << color::reset<UseColor>;
     if (std::distance(std::cbegin(arg), std::cend(arg)) == 0) {
-      os << (UseColor ? ansi_light_black : "") << '<' << (UseColor ? ansi_reset : "")
+      os << color::gray<UseColor> << '<' << color::reset<UseColor>
          << "empty multidimensional container"
-         << (UseColor ? ansi_light_black : "") << '>' << (UseColor ? ansi_reset : "")
+         << color::gray<UseColor> << '>' << color::reset<UseColor>
          << '\n';
       return;
     }
@@ -321,7 +335,7 @@ namespace debug_print {
           os << '\n';
           multi_print_impl<UseColor, true, IndentWidth>(names, args...);
         } else {
-          os << (UseColor ? ansi_light_black : "") << " | " << (UseColor ? ansi_reset : "");
+          os << color::gray<UseColor> << " | " << color::reset<UseColor>;
           multi_print_impl<UseColor, false, IndentWidth>(names, args...);
         }
       } else {
