@@ -32,17 +32,19 @@ namespace debug_print {
   std::ostream& os = std::cerr;
 
   namespace color {
+    using namespace std::string_view_literals;
+
     template <bool> constexpr std::string_view gray;
     template <bool> constexpr std::string_view cyan;
     template <bool> constexpr std::string_view reset;
 
-    template <> constexpr std::string_view gray<true>  = "\x1b[36m";
-    template <> constexpr std::string_view cyan<true>  = "\x1b[90m";
-    template <> constexpr std::string_view reset<true> = "\x1b[0m";
+    template <> constexpr std::string_view gray<true>  = "\x1b[36m"sv;
+    template <> constexpr std::string_view cyan<true>  = "\x1b[90m"sv;
+    template <> constexpr std::string_view reset<true> = "\x1b[0m"sv;
 
-    template <> constexpr std::string_view gray<false>  = "";
-    template <> constexpr std::string_view cyan<false>  = "";
-    template <> constexpr std::string_view reset<false> = "";
+    template <> constexpr std::string_view gray<false>  = ""sv;
+    template <> constexpr std::string_view cyan<false>  = ""sv;
+    template <> constexpr std::string_view reset<false> = ""sv;
   }
 
   template <class Tp> auto has_cbegin(int)     -> decltype(std::cbegin(std::declval<Tp>()), std::true_type {});
