@@ -1,5 +1,6 @@
 [codestyle]
-indent_type='tab'
+indent_type='space'
+indent_width=2
 workspace_dir='~/workspace/atcoder/contest/'
 template_file='~/workspace/atcoder/template/template.cpp'
 lang='cpp'
