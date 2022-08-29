@@ -7,10 +7,10 @@ NDEBUG_OPT = -O2
 PRINT_OPT  = -DDEBUG_PRINT
 
 TARGET_DIR           = precompiled
-TARGET_DEBUG_PRINT   = $(TARGET_DIR)/debug_on_print_on/$(SRC).gch
-TARGET_DEBUG_NPRINT  = $(TARGET_DIR)/debug_on_print_off/$(SRC).gch
-TARGET_NDEBUG_PRINT  = $(TARGET_DIR)/debug_off_print_on/$(SRC).gch
-TARGET_NDEBUG_NPRINT = $(TARGET_DIR)/debug_off_print_off/$(SRC).gch
+TARGET_DEBUG_PRINT   = $(TARGET_DIR)/debug_on_print_on/$(SRC).pch
+TARGET_DEBUG_NPRINT  = $(TARGET_DIR)/debug_on_print_off/$(SRC).pch
+TARGET_NDEBUG_PRINT  = $(TARGET_DIR)/debug_off_print_on/$(SRC).pch
+TARGET_NDEBUG_NPRINT = $(TARGET_DIR)/debug_off_print_off/$(SRC).pch
 
 TARGETS = $(TARGET_DEBUG_PRINT)   \
 		  $(TARGET_DEBUG_NPRINT)  \
