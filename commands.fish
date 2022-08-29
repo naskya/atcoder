@@ -1,5 +1,9 @@
 set atcoder_dir ~/workspace/atcoder
 
+function cp_init
+    source {$atcoder_dir}/venv/bin/activate.fish
+end
+
 
 function contest -d "Prepare for atcoder contests"
     if test (count $argv) -eq 0
@@ -12,8 +16,7 @@ function contest -d "Prepare for atcoder contests"
         return 1
     end
 
-    source {$atcoder_dir}/venv/bin/activate.fish
-    
+    cp_init
     atcoder-tools gen $argv
     cd {$atcoder_dir}/contest/$argv
     nvim .
