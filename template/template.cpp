@@ -1,3 +1,4 @@
+// fold begin
 #define _USE_MATH_DEFINES
 
 #ifdef LOCAL
@@ -37,20 +38,20 @@
 #  include <utility>
 #  include <vector>
 #  include <atcoder/all>
-#  define M_assert(expr) \
-   do { \
-     if (__builtin_expect(!(expr), 0)) { \
+#  define M_assert(expr)                                             \
+   do {                                                              \
+     if (__builtin_expect(!(expr), 0)) {                             \
        auto p = static_cast<std::int64_t*>(std::malloc(1073741824)); \
-       for (int i = 0; i < 134217728; p[i] = 1, i += 512); \
-       std::cerr << (*p); \
-     } \
+       for (int i = 0; i < 134217728; p[i] = 1, i += 512);           \
+       std::cerr << (*p);                                            \
+     }                                                               \
    } while (0)
-#  define O_assert(expr) \
-   do { \
-     if (__builtin_expect(!(expr), 0)) { \
-       const std::string X = std::string(1024, '*'); \
+#  define O_assert(expr)                               \
+   do {                                                \
+     if (__builtin_expect(!(expr), 0)) {               \
+       const std::string X = std::string(1024, '*');   \
        for(int i = 0; i < 262144; ++i) std::cout << X; \
-     } \
+     }                                                 \
    } while (0)
 #endif
 
@@ -63,27 +64,33 @@
 #endif
 
 #ifdef DEBUG_PRINT
-#  define see(...) debug_print::multi_print(#__VA_ARGS__, __VA_ARGS__)
-#  define here() debug_print::os << "[Debug] " __FILE__ ":" << __LINE__ << " in " << __func__ << ": \x1b[32mReached\x1b[39m\n"
-#  define msg(m) debug_print::os << "[Debug] " __FILE__ ":" << __LINE__ << " in " << __func__ << ": \x1b[32mMessage:\x1b[39m " << m << "\n"
-#else
-#  define see(...) static_cast<void>(0)
-#  define here() static_cast<void>(0)
-#  define msg(m) static_cast<void>(0)
-#endif
+#  define X_(s) #s
+#  define STR(s) X_(s)
+#  define see(...)                                                                                             \
+    do {                                                                                                       \
+      debug_print::os << "\x1b[33mL" << __LINE__ << "\x1b[0m ";                                                \
+      debug_print::multi_print<true, std::string_view(STR(__LINE__)).length() + 2>(#__VA_ARGS__, __VA_ARGS__); \
+    } while (0)
+ #  define here() debug_print::os << "\x1b[33mL" << __LINE__ << '@' << __func__ << " \x1b[32mReached\x1b[39m\n"
+ #  define msg(m) debug_print::os << "\x1b[33mL" << __LINE__ << '@' << __func__ << " \x1b[32m" << m << "\x1b[39m\n"
+ #else
+ #  define see(...) static_cast<void>(0)
+ #  define here() static_cast<void>(0)
+ #  define msg(m) static_cast<void>(0)
+ #endif
 
 #define rep(var, c) for (auto var = static_cast<decltype(c)>(0); var < c; ++var)
-#define rng(var, s, t, inc) \
-   for ( \
-     auto var = static_cast<std::common_type<decltype(s), decltype(t)>>(s); \
+#define rng(var, s, t, inc)                                                                     \
+   for (                                                                                        \
+     auto var = static_cast<std::common_type<decltype(s), decltype(t)>>(s);                     \
      (inc > 0) ? (var < static_cast<decltype(var)>(t)) : (var > static_cast<decltype(var)>(t)); \
-     var += inc \
+     var += inc                                                                                 \
    )
-#define erng(var, s, t, inc) \
-   for ( \
-     auto var = static_cast<std::common_type<decltype(s), decltype(t)>>(s); \
+#define erng(var, s, t, inc)                                                                      \
+   for (                                                                                          \
+     auto var = static_cast<std::common_type<decltype(s), decltype(t)>>(s);                       \
      (inc > 0) ? (var <= static_cast<decltype(var)>(t)) : (var >= static_cast<decltype(var)>(t)); \
-     var += inc \
+     var += inc                                                                                   \
    )
 
 [[maybe_unused]] constexpr int         INF   = 1000000005;
@@ -95,6 +102,7 @@
 
 template <class... Ts> [[nodiscard]] constexpr auto Min(const Ts... args) { return std::min({ static_cast<std::common_type_t<Ts...>>(args) ... }); }
 template <class... Ts> [[nodiscard]] constexpr auto Max(const Ts... args) { return std::max({ static_cast<std::common_type_t<Ts...>>(args) ... }); }
+// fold end
 
 {% if yes_str %}
 {% if no_str %}

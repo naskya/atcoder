@@ -219,17 +219,32 @@ namespace debug_print {
     os << ']';
   }
 
-  template <class Tp> std::enable_if_t<!is_multidim_container_v<Tp>>
+  const std::string_view ansi_cyan  = "\x1b[36m";
+  const std::string_view ansi_reset = "\x1b[0m";
+
+  template <bool UseColor, bool Indent, std::size_t IndentWidth, class Tp> std::enable_if_t<!is_multidim_container_v<Tp>>
   print(std::string_view name, const Tp& arg) {
+    for (std::size_t i = 0; i < Indent * IndentWidth; ++i)
+      os << ' ';
+    if constexpr (UseColor)
+      os << ansi_cyan;
     os << name << ": ";
+    if constexpr (UseColor)
+      os << ansi_reset;
     out(arg);
     if constexpr (is_container_v<Tp>)
       os << '\n';
   }
 
-  template <class Tp> std::enable_if_t<is_multidim_container_v<Tp>>
+  template <bool UseColor, bool Indent, std::size_t IndentWidth, class Tp> std::enable_if_t<is_multidim_container_v<Tp>>
   print(std::string_view name, const Tp& arg) {
+    for (std::size_t i = 0; i < (Indent * IndentWidth); ++i)
+      os << ' ';
+    if constexpr (UseColor)
+      os << ansi_cyan;
     os << name << ": ";
+    if constexpr (UseColor)
+      os << ansi_reset;
     if (std::distance(std::cbegin(arg), std::cend(arg)) == 0) {
       os << "<empty multidimensional container>\n";
       return;
@@ -239,14 +254,15 @@ namespace debug_print {
         if (is_first_elem)
           is_first_elem = false;
         else
-          for (std::size_t i = 0; i < name.length() + 2; i++)
+          for (std::size_t i = 0; i < name.length() + IndentWidth + 2; ++i)
             os << ' ';
         out(elem);
         os << '\n';
     });
   }
 
-  template <class Tp, class... Ts> void multi_print(std::string_view names, const Tp& arg, const Ts&... args) {
+  template <bool UseColor, bool Indent, std::size_t IndentWidth, class Tp, class... Ts>
+  void multi_print_impl(std::string_view names, const Tp& arg, const Ts&... args) {
     if constexpr (sizeof...(Ts) == 0) {
       names.remove_suffix(
         std::distance(
@@ -255,13 +271,13 @@ namespace debug_print {
                            [](const char c) { return std::isspace(c); })
         )
       );
-      print(names, arg);
+      print<UseColor, Indent, IndentWidth>(names, arg);
       if constexpr (!is_container_v<Tp>)
         os << '\n';
     } else {
       std::size_t comma_pos = 0;
 
-      for (std::size_t i = 0, paren_depth = 0, inside_quote = false; i < names.length(); i++) {
+      for (std::size_t i = 0, paren_depth = 0, inside_quote = false; i < names.length(); ++i) {
         if (!inside_quote && paren_depth == 0 && i > 0 && names[i - 1] != '\'' && names[i] == ',') {
           comma_pos = i;
           break;
@@ -271,9 +287,9 @@ namespace debug_print {
           inside_quote ^= true;
         }
         if (!inside_quote && names[i] == '(' && (i == 0 || names[i - 1] != '\''))
-          paren_depth++;
+          ++paren_depth;
         if (!inside_quote && names[i] == ')' && (i == 0 || names[i - 1] != '\''))
-          paren_depth--;
+          --paren_depth;
       }
 
       const std::size_t first_varname_length = comma_pos - std::distance(
@@ -283,14 +299,7 @@ namespace debug_print {
           [](const char c) { return std::isspace(c); }
         )
       );
-      print(names.substr(0, first_varname_length), arg);
-
-      if constexpr (!is_container_v<Tp>) {
-        if constexpr (is_container_v<first_t<Ts...>>)
-          os << '\n';
-        else
-          os << " | ";
-      }
+      print<UseColor, Indent, IndentWidth>(names.substr(0, first_varname_length), arg);
 
       const std::size_t next_varname_begins_at = std::distance(
         names.cbegin(),
@@ -301,8 +310,23 @@ namespace debug_print {
       );
       names.remove_prefix(next_varname_begins_at);
 
-      multi_print(names, args...);
+      if constexpr (!is_container_v<Tp>) {
+        if constexpr (is_container_v<first_t<Ts...>>) {
+          os << '\n';
+          multi_print_impl<UseColor, true, IndentWidth>(names, args...);
+        } else {
+          os << " | ";
+          multi_print_impl<UseColor, false, IndentWidth>(names, args...);
+        }
+      } else {
+        multi_print_impl<UseColor, true, IndentWidth>(names, args...);
+      }
     }
+  }
+
+  template <bool UseColor = false, std::size_t IndentWidth = 0, class... Ts>
+  void multi_print(std::string_view names, const Ts&... args) {
+    multi_print_impl<UseColor, false, IndentWidth>(names, args...);
   }
 }  // namespace debug_print
 
