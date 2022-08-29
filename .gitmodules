@@ -1,3 +1,6 @@
 [submodule "ac-library"]
 	path = ac-library
 	url = https://github.com/atcoder/ac-library.git
+[submodule "testcase-generator"]
+	path = testcase-generator
+	url = https://github.com/naskya/testcase-generator.git
