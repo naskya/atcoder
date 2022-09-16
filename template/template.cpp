@@ -2,7 +2,7 @@
 #define _USE_MATH_DEFINES
 
 // https://atcoder.jp/contests/language-test-202001
-#ifdef NDEBUG
+#ifdef ONLINE_JUDGE
 #  undef NDEBUG
 #endif
 
