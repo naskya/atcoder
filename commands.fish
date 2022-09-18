@@ -1,9 +1,5 @@
 set atcoder_dir ~/workspace/atcoder
 
-function cp_init
-    source {$atcoder_dir}/venv/bin/activate.fish
-end
-
 
 function contest -d "Prepare for atcoder contests"
     if test (count $argv) -eq 0
