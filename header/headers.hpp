@@ -32,6 +32,6 @@
 #  include <utility>
 #  include <vector>
 #  include <atcoder/all>
-#  include "debug_print.hpp"
+#  include "debug_print/debug_print.hpp"
 #endif
 

@@ -4,3 +4,6 @@
 [submodule "testcase-generator"]
 	path = testcase-generator
 	url = https://github.com/naskya/testcase-generator.git
+[submodule "header/debug_print"]
+	path = header/debug_print
+	url = https://gist.github.com/1e5e5cd269cfe16a76988378a60e2ca3.git
