@@ -1,7 +1,7 @@
 set atcoder_dir ~/workspace/atcoder
 
 
-function contest -d "Prepare for atcoder contests"
+function contest
     if test (count $argv) -eq 0
         echo "You need to specify the contest id (e.g. abc123)."
         return 1
