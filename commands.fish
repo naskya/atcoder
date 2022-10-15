@@ -12,7 +12,6 @@ function contest -d "Prepare for atcoder contests"
         return 1
     end
 
-    cp_init
     atcoder-tools gen $argv
     cd {$atcoder_dir}/contest/$argv
     nvim .
@@ -96,14 +95,12 @@ end
 
 
 function ck
-    cp_init
     cx
     atcoder-tools test
 end
 
 
 function sm
-    cp_init
     cx
     atcoder-tools submit -u
 end
